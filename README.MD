@@ -1,1 +1,1 @@
-## A basic web server in GoLang
+## A basic message queue inside of GoLang
