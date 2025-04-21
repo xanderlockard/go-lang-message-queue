@@ -1,7 +1,7 @@
 package queue
 
 type Queable struct {
-	processName   string
+	queueName     string
 	processId     int
 	processStatus string
 	next          *Queable
@@ -23,7 +23,7 @@ type Queue interface {
 
 func (q *LinkedListQueue) Enqueue(qb Queable) error {
 	current := q.Last()
-	if current.processId == 0 {
+	if current == nil || current.processId == 0 {
 		q.first = &qb
 		q.last = &qb
 		q.size++
@@ -36,10 +36,10 @@ func (q *LinkedListQueue) Enqueue(qb Queable) error {
 	return nil
 }
 
-func (q *LinkedListQueue) Dequeue() (Queable, error) {
+func (q *LinkedListQueue) Dequeue() (*Queable, error) {
 	current := q.First()
-	if current.processId == 0 {
-		return Queable{}, nil
+	if current == nil || current.processId == 0 {
+		return nil, nil
 	}
 	if current.next != nil {
 		q.first = current.next
@@ -57,16 +57,16 @@ func (q *LinkedListQueue) Size() int {
 	return q.size
 }
 
-func (q *LinkedListQueue) First() Queable {
+func (q *LinkedListQueue) First() *Queable {
 	if q.Size() == 0 {
-		return Queable{}
+		return nil
 	}
-	return *q.first
+	return q.first
 }
 
-func (q *LinkedListQueue) Last() Queable {
+func (q *LinkedListQueue) Last() *Queable {
 	if q.Size() == 0 {
-		return Queable{}
+		return nil
 	}
-	return *q.last
+	return q.last
 }
