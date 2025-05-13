@@ -11,17 +11,17 @@ type QueableJSON struct {
 	MessageParams []string `json:"messageParams"`
 }
 
-func deserializeJsonIntoQueable(jsonStr string) (*Queable, error) {
+func DeserializeJsonIntoQueable(requestBody []byte) (*Queable, error) {
 	var queableJSON QueableJSON
-	err := json.Unmarshal([]byte(jsonStr), &queableJSON)
+	err := json.Unmarshal(requestBody, &queableJSON)
 	if err != nil {
 		return nil, errors.New("failed to parse JSON: " + err.Error())
 	}
 
 	queable := &Queable{
-		queueName:     queableJSON.QueueName,
-		processId:     0,
-		processStatus: "pending",
+		QueueName:     queableJSON.QueueName,
+		ProcessId:     0,
+		ProcessStatus: "pending",
 	}
 
 	return queable, nil
