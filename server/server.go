@@ -1,12 +1,14 @@
 package server
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
+
+	"github.com/xande/go-lang-task-queue/queue"
 )
 
-var serverQueue = LinkedListQueue{}
+var serverQueue = queue.LinkedListQueue{}
 
 type ServerConfig struct {
 	address string
@@ -25,14 +27,16 @@ func createServer(s ServerConfig) *http.Server {
 }
 
 func enqueueMessage(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
+	_, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Error reading request body", http.StatusBadRequest)
 		return
 	}
 	defer r.Body.Close()
 
-	serverQueue.Enqueue()
+	queable := queue.Queable{}
+
+	serverQueue.Enqueue(queable)
 }
 
 func initializeHandlers() {
