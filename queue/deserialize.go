@@ -11,6 +11,11 @@ type QueableJSON struct {
 	MessageParams []string `json:"messageParams"`
 }
 
+type HandleableMessage struct {
+	MessageName   string   `json:"messageName"`
+	MessageParams []string `json:"messageParams"`
+}
+
 func DeserializeJsonIntoQueable(requestBody []byte) (*Queable, error) {
 	var queableJSON QueableJSON
 	err := json.Unmarshal(requestBody, &queableJSON)
@@ -26,3 +31,5 @@ func DeserializeJsonIntoQueable(requestBody []byte) (*Queable, error) {
 
 	return queable, nil
 }
+
+func DeserializeMessageIntoMqttParam(messageBody []byte) (*ListenableMessage, error)
