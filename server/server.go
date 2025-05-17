@@ -9,7 +9,7 @@ import (
 	"github.com/xande/go-lang-task-queue/queue"
 )
 
-var serverQueue = queue.LinkedListQueue{}
+var serverQueue = queue.CreateQueue()
 
 type ServerConfig struct {
 	Address string
@@ -42,8 +42,6 @@ func enqueueMessage(w http.ResponseWriter, r *http.Request) {
 
 	queable, _ := queue.DeserializeJsonIntoQueable(body)
 	serverQueue.Enqueue(*queable)
-	fmt.Printf("SIZE: %d\n", serverQueue.Size())
-	fmt.Printf("FIRST: %d\n", serverQueue.First().ProcessId)
 }
 
 func healthCheck(w http.ResponseWriter, r *http.Request) {

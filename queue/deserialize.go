@@ -3,33 +3,44 @@ package queue
 import (
 	"encoding/json"
 	"errors"
+
+	"github.com/xande/go-lang-task-queue/listener"
 )
 
-// JSON structure expected for deserialization
 type QueableJSON struct {
-	QueueName     string   `json:"queueName"`
-	MessageParams []string `json:"messageParams"`
+	MessageName   string            `json:"messageName"`   // this is the name of the event to queue
+	MessageParams map[string]string `json:"messageParams"` // these are the parameters sent with the server request for the event.
 }
 
-type HandleableMessage struct {
-	MessageName   string   `json:"messageName"`
-	MessageParams []string `json:"messageParams"`
+type ListenerMessageJson struct {
+	EventNames []string `json:"messageNames"` // this is the list of the events the worker can handle
 }
 
 func DeserializeJsonIntoQueable(requestBody []byte) (*Queable, error) {
-	var queableJSON QueableJSON
-	err := json.Unmarshal(requestBody, &queableJSON)
+	var queableJson QueableJSON
+	err := json.Unmarshal(requestBody, &queableJson)
 	if err != nil {
-		return nil, errors.New("failed to parse JSON: " + err.Error())
+		return nil, errors.New("failed to parse Json: " + err.Error())
 	}
 
 	queable := &Queable{
-		QueueName:     queableJSON.QueueName,
-		ProcessId:     0,
-		ProcessStatus: "pending",
+		MessageName:   queableJson.MessageName,
+		MessageParams: queableJson.MessageParams,
 	}
 
 	return queable, nil
 }
 
-func DeserializeMessageIntoMqttParam(messageBody []byte) (*ListenableMessage, error)
+func DeserializeMessageIntoMqttParam(messageBody []byte) (*listener.ListenerMessage, error) {
+	var listenerMessageJson ListenerMessageJson
+	err := json.Unmarshal(messageBody, &listenerMessageJson)
+	if err != nil {
+		return nil, errors.New("failed to parse Json: " + err.Error())
+	}
+
+	listenerMessage := &listener.ListenerMessage{
+		MessageNames: listenerMessageJson.EventNames,
+	}
+
+	return listenerMessage, nil
+}

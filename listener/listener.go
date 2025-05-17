@@ -5,9 +5,8 @@ import (
 	"mqtt"
 )
 
-type ListenableMessage struct {
-	MessageName   string
-	MessageParams string
+type ListenerMessage struct {
+	MessageNames []string
 }
 
 type ListenerConfig struct {
@@ -23,7 +22,8 @@ type ListenerConnection struct {
 	client mqtt.Client
 }
 
-func (connection ListenerConnection) handleMessage() {
+// Here we will take the message from the worker and add it to list of available workers
+func (connection ListenerConnection) handleMessage(message ListenerMessage) {
 
 }
 

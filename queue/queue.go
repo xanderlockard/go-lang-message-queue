@@ -1,16 +1,17 @@
 package queue
 
 type Queable struct {
-	QueueName     string
+	MessageName   string
+	MessageParams map[string]string
 	ProcessId     int
-	ProcessStatus string
 	Next          *Queable
 }
 
 type LinkedListQueue struct {
-	first *Queable
-	last  *Queable
-	size  int
+	first  *Queable
+	last   *Queable
+	size   int
+	lastId int
 }
 
 type Queue interface {
@@ -19,6 +20,12 @@ type Queue interface {
 	Peek() (Queable, error)
 	Size() int
 	Last() (Queable, error)
+}
+
+func CreateQueue() LinkedListQueue {
+	return LinkedListQueue{
+		lastId: 0,
+	}
 }
 
 func (q *LinkedListQueue) Enqueue(qb Queable) error {
